@@ -5,6 +5,7 @@ CC=gcc
 LATEXC=pdflatex
 DOCC=doxygen
 CFLAGS=-g -Wall 
+OPT=-g -Wall -Wextra
 
 REFDIR=.
 SRCDIR=$(REFDIR)/src
@@ -31,12 +32,18 @@ report: $(PDF)
 doc: $(DOCDIR)/index.html
 
 
-$(BINDIR)/distanceEdition: $(SRCDIR)/distanceEdition.c $(BINDIR)/Needleman-Wunsch-recmemo.o
+$(BINDIR)/distanceEdition: $(SRCDIR)/distanceEdition.c $(BINDIR)/Needleman-Wunsch-recmemo.o 
 	$(CC) $(OPT) -I$(SRCDIR) -o $(BINDIR)/distanceEdition $(BINDIR)/Needleman-Wunsch-recmemo.o $(SRCDIR)/distanceEdition.c 
+
+$(BINDIR)/distanceEdition-ite: $(SRCDIR)/distanceEdition.c $(BINDIR)/Needleman-Wunsch-ite.o
+	$(CC) $(OPT) -I$(SRCDIR) -D__ITE__ -o $(BINDIR)/distanceEdition $(BINDIR)/Needleman-Wunsch-ite.o $(SRCDIR)/distanceEdition.c 
 
 $(BINDIR)/Needleman-Wunsch-recmemo.o: $(SRCDIR)/Needleman-Wunsch-recmemo.h $(SRCDIR)/Needleman-Wunsch-recmemo.c $(SRCDIR)/characters_to_base.h
 	$(CC) $(OPT) -I$(SRCDIR) -c  -o $(BINDIR)/Needleman-Wunsch-recmemo.o $(SRCDIR)/Needleman-Wunsch-recmemo.c
 	
+$(BINDIR)/Needleman-Wunsch-ite.o: $(SRCDIR)/Needleman-Wunsch-ite.h $(SRCDIR)/Needleman-Wunsch-ite.c $(SRCDIR)/characters_to_base.h
+	$(CC) $(OPT) -I$(SRCDIR) -c  -o $(BINDIR)/Needleman-Wunsch-ite.o $(SRCDIR)/Needleman-Wunsch-ite.c
+
 $(BINDIR)/extract-fasta-sequences-size: $(SRCDIR)/extract-fasta-sequences-size.c
 	$(CC) $(OPT) -I$(SRCDIR) -o $(BINDIR)/extract-fasta-sequences-size $(SRCDIR)/extract-fasta-sequences-size.c
 
@@ -59,6 +66,10 @@ $(DOCDIR)/index.html: $(SRCDIR)/Doxyfile $(CSOURCE)
 test: $(BINDIR)/distanceEdition $(TESTDIR)/Makefile-test
 	cd $(TESTDIR) ; make -f Makefile-test all 
 	
+test-ite: $(BINDIR)/distanceEdition-ite $(TESTDIR)/Makefile-test
+	cd $(TESTDIR) ; make -f Makefile-test all 
+
+
 test-valgrind: $(BINDIR)/distanceEdition $(TESTDIR)/Makefile-test
 	make -f $(TESTDIR)/Makefile-test all-valgrind
 	
