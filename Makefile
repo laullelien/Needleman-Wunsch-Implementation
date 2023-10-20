@@ -5,7 +5,6 @@ CC=gcc
 LATEXC=pdflatex
 DOCC=doxygen
 CFLAGS=-g -Wall 
-OPT=-g -Wall -Wextra
 
 REFDIR=.
 SRCDIR=$(REFDIR)/src
@@ -31,6 +30,7 @@ report: $(PDF)
 
 doc: $(DOCDIR)/index.html
 
+# distanceEdition
 
 $(BINDIR)/distanceEdition: $(SRCDIR)/distanceEdition.c $(BINDIR)/Needleman-Wunsch-recmemo.o 
 	$(CC) $(OPT) -I$(SRCDIR) -o $(BINDIR)/distanceEdition $(BINDIR)/Needleman-Wunsch-recmemo.o $(SRCDIR)/distanceEdition.c 
@@ -38,11 +38,21 @@ $(BINDIR)/distanceEdition: $(SRCDIR)/distanceEdition.c $(BINDIR)/Needleman-Wunsc
 $(BINDIR)/distanceEdition-ite: $(SRCDIR)/distanceEdition.c $(BINDIR)/Needleman-Wunsch-ite.o
 	$(CC) $(OPT) -I$(SRCDIR) -D__ITE__ -o $(BINDIR)/distanceEdition $(BINDIR)/Needleman-Wunsch-ite.o $(SRCDIR)/distanceEdition.c 
 
+$(BINDIR)/distanceEdition-caware: $(SRCDIR)/distanceEdition.c $(BINDIR)/Needleman-Wunsch-caware.o
+	$(CC) $(OPT) -I$(SRCDIR) -D__CAWARE__ -o $(BINDIR)/distanceEdition $(BINDIR)/Needleman-Wunsch-caware.o $(SRCDIR)/distanceEdition.c 
+
+# Algorithm
+
 $(BINDIR)/Needleman-Wunsch-recmemo.o: $(SRCDIR)/Needleman-Wunsch-recmemo.h $(SRCDIR)/Needleman-Wunsch-recmemo.c $(SRCDIR)/characters_to_base.h
 	$(CC) $(OPT) -I$(SRCDIR) -c  -o $(BINDIR)/Needleman-Wunsch-recmemo.o $(SRCDIR)/Needleman-Wunsch-recmemo.c
 	
 $(BINDIR)/Needleman-Wunsch-ite.o: $(SRCDIR)/Needleman-Wunsch-ite.h $(SRCDIR)/Needleman-Wunsch-ite.c $(SRCDIR)/characters_to_base.h
 	$(CC) $(OPT) -I$(SRCDIR) -c  -o $(BINDIR)/Needleman-Wunsch-ite.o $(SRCDIR)/Needleman-Wunsch-ite.c
+
+$(BINDIR)/Needleman-Wunsch-caware.o: $(SRCDIR)/Needleman-Wunsch-caware.h $(SRCDIR)/Needleman-Wunsch-caware.c $(SRCDIR)/characters_to_base.h
+	$(CC) $(OPT) -I$(SRCDIR) -c  -o $(BINDIR)/Needleman-Wunsch-caware.o $(SRCDIR)/Needleman-Wunsch-caware.c
+
+
 
 $(BINDIR)/extract-fasta-sequences-size: $(SRCDIR)/extract-fasta-sequences-size.c
 	$(CC) $(OPT) -I$(SRCDIR) -o $(BINDIR)/extract-fasta-sequences-size $(SRCDIR)/extract-fasta-sequences-size.c
@@ -69,6 +79,8 @@ test: $(BINDIR)/distanceEdition $(TESTDIR)/Makefile-test
 test-ite: $(BINDIR)/distanceEdition-ite $(TESTDIR)/Makefile-test
 	cd $(TESTDIR) ; make -f Makefile-test all 
 
+test-caware: $(BINDIR)/distanceEdition-caware $(TESTDIR)/Makefile-test
+	cd $(TESTDIR) ; make -f Makefile-test all 
 
 test-valgrind: $(BINDIR)/distanceEdition $(TESTDIR)/Makefile-test
 	make -f $(TESTDIR)/Makefile-test all-valgrind

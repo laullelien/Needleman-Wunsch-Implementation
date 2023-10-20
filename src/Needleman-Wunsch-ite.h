@@ -24,7 +24,7 @@
  * Iterative implementation of NeedlemanWunsch with memoization
  */
 /**
- * \fn long EditDistance_ite(char* A, size_t lengthA, char* B, size_t lengthB);
+ * \fn long EditDistance_NW_Ite(char* A, size_t lengthA, char* B, size_t lengthB);
  * \brief computes the edit distance between A[0 .. lengthA-1] and B[0 .. lengthB-1]
  * \param A  : array of char represneting a genetic sequence A 
  * \param lengthA :  number of elements in A 
@@ -32,7 +32,7 @@
  * \param lengthB :  number of elements in B 
  * \return :  edit distance between A and B }
  *
- * editDistance_ite is an iterative immplementatioin of Needleman-Wunsch algorithm.
+ * editDistance_NW_Ite is an iterative immplementatioin of Needleman-Wunsch algorithm.
  *
  */
 long EditDistance_NW_Ite(char* A, size_t lengthA, char* B, size_t lengthB);

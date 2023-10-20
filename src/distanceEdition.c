@@ -50,6 +50,8 @@ following char arrays :
  */
 #ifdef __ITE__
 #include "Needleman-Wunsch-ite.h" // Iterative implementation of NeedlemanWunsch with memoization
+#elif defined __CAWARE__
+#include "Needleman-Wunsch-caware.h" // Cache aware implementation of NeedlemanWunsch with memoization
 #else
 #include "Needleman-Wunsch-recmemo.h" // Recursive implementation of NeedlemanWunsch with memoization
 #endif
@@ -64,7 +66,7 @@ following char arrays :
 #include <unistd.h>   /* for close */
 
 #ifdef __PERF_MESURE__
-#include "/matieres/4MMAOD6/2022-10-TP-AOD-ADN-Docs-fournis/tp-ADN-distance/srcperf/perfMesure.c"
+#include "../srcperf/perfMesure.c"
 #endif
 
 /******************************************************************************/
@@ -236,6 +238,8 @@ int main(int argc, char *argv[]) {
 #endif
 #if defined __ITE__
     long res = EditDistance_NW_Ite(seq[0], length[0], seq[1], length[1]); 
+#elif defined __CAWARE__
+    long res = EditDistance_NW_Caware(seq[0], length[0], seq[1], length[1]); 
 #else
     long res = EditDistance_NW_Rec(seq[0], length[0], seq[1], length[1]);
 #endif
