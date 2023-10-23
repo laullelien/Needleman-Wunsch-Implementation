@@ -50,7 +50,7 @@ $(BINDIR)/Needleman-Wunsch-ite.o: $(SRCDIR)/Needleman-Wunsch-ite.h $(SRCDIR)/Nee
 	$(CC) $(OPT) -I$(SRCDIR) -c  -o $(BINDIR)/Needleman-Wunsch-ite.o $(SRCDIR)/Needleman-Wunsch-ite.c
 
 $(BINDIR)/Needleman-Wunsch-caware.o: $(SRCDIR)/Needleman-Wunsch-caware.h $(SRCDIR)/Needleman-Wunsch-caware.c $(SRCDIR)/characters_to_base.h
-	$(CC) $(OPT) -I$(SRCDIR) -c  -o $(BINDIR)/Needleman-Wunsch-caware.o $(SRCDIR)/Needleman-Wunsch-caware.c
+	$(CC) $(OPT) -I$(SRCDIR) -c -o $(BINDIR)/Needleman-Wunsch-caware.o $(SRCDIR)/Needleman-Wunsch-caware.c
 
 
 

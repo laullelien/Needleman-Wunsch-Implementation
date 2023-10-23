@@ -23,12 +23,12 @@
 /** \def L
  *  \brief Size of a cache line
  */
-#define L
+#define L 64
 
 /** \def Z
  *  \brief Size of the cache
  */
-#define Z
+#define Z 4096
 
 /********************************************************************************
  * Cache aware implementation of NeedlemanWunsch with memoization

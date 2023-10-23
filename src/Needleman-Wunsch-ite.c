@@ -42,7 +42,7 @@ long EditDistance_NW_Ite(char *A, size_t lengthA, char *B, size_t lengthB)
     long *p_prev = prev;
     long *p_curr = curr;
 
-    // Sets the first line
+    // Set the first line
     prev[n] = 0;
     for (int j = n - 1; j >= 0; j--)
     {
@@ -50,7 +50,7 @@ long EditDistance_NW_Ite(char *A, size_t lengthA, char *B, size_t lengthB)
                   prev[j + 1]; // i == m and j < n
     }
 
-    // Computes the other n lines
+    // Compute the other n lines
     for (int i = m - 1; i >= 0; i--)
     {
         p_curr[n] =
