@@ -23,7 +23,7 @@
 /** \def S
  *  \brief Threshold under which both string length must be to compute values
  */
-#define S 50
+#define S 800
 
 /********************************************************************************
  * Cache oblivious implementation of NeedlemanWunsch with memoization

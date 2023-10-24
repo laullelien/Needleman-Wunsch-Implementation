@@ -2,3 +2,4 @@ bin/
 tp-aod-distance-ADN-enonce.pdf
 doc/
 .vscode/
+tests/cachegrind.*
