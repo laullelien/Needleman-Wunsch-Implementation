@@ -41,6 +41,9 @@ $(BINDIR)/distanceEdition-ite: $(SRCDIR)/distanceEdition.c $(BINDIR)/Needleman-W
 $(BINDIR)/distanceEdition-caware: $(SRCDIR)/distanceEdition.c $(BINDIR)/Needleman-Wunsch-caware.o
 	$(CC) $(OPT) -I$(SRCDIR) -D__CAWARE__ -o $(BINDIR)/distanceEdition $(BINDIR)/Needleman-Wunsch-caware.o $(SRCDIR)/distanceEdition.c 
 
+$(BINDIR)/distanceEdition-coblivious: $(SRCDIR)/distanceEdition.c $(BINDIR)/Needleman-Wunsch-coblivious.o
+	$(CC) $(OPT) -I$(SRCDIR) -D__COBLIVIOUS__ -o $(BINDIR)/distanceEdition $(BINDIR)/Needleman-Wunsch-coblivious.o $(SRCDIR)/distanceEdition.c 
+
 # Algorithm
 
 $(BINDIR)/Needleman-Wunsch-recmemo.o: $(SRCDIR)/Needleman-Wunsch-recmemo.h $(SRCDIR)/Needleman-Wunsch-recmemo.c $(SRCDIR)/characters_to_base.h
@@ -52,6 +55,8 @@ $(BINDIR)/Needleman-Wunsch-ite.o: $(SRCDIR)/Needleman-Wunsch-ite.h $(SRCDIR)/Nee
 $(BINDIR)/Needleman-Wunsch-caware.o: $(SRCDIR)/Needleman-Wunsch-caware.h $(SRCDIR)/Needleman-Wunsch-caware.c $(SRCDIR)/characters_to_base.h
 	$(CC) $(OPT) -I$(SRCDIR) -c -o $(BINDIR)/Needleman-Wunsch-caware.o $(SRCDIR)/Needleman-Wunsch-caware.c
 
+$(BINDIR)/Needleman-Wunsch-coblivious.o: $(SRCDIR)/Needleman-Wunsch-coblivious.h $(SRCDIR)/Needleman-Wunsch-coblivious.c $(SRCDIR)/characters_to_base.h
+	$(CC) $(OPT) -I$(SRCDIR) -c -o $(BINDIR)/Needleman-Wunsch-coblivious.o $(SRCDIR)/Needleman-Wunsch-coblivious.c
 
 
 $(BINDIR)/extract-fasta-sequences-size: $(SRCDIR)/extract-fasta-sequences-size.c
@@ -80,6 +85,9 @@ test-ite: $(BINDIR)/distanceEdition-ite $(TESTDIR)/Makefile-test
 	cd $(TESTDIR) ; make -f Makefile-test all 
 
 test-caware: $(BINDIR)/distanceEdition-caware $(TESTDIR)/Makefile-test
+	cd $(TESTDIR) ; make -f Makefile-test all 
+
+test-coblivious: $(BINDIR)/distanceEdition-coblivious $(TESTDIR)/Makefile-test
 	cd $(TESTDIR) ; make -f Makefile-test all 
 
 test-valgrind: $(BINDIR)/distanceEdition $(TESTDIR)/Makefile-test

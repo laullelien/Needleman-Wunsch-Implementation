@@ -98,5 +98,7 @@ long EditDistance_NW_Caware(char *A, size_t lengthA, char *B, size_t lengthB)
             }
         }
     }
-    return values[0];
+    long ans = values[0];
+    free(values);
+    return ans;
 }

@@ -52,6 +52,8 @@ following char arrays :
 #include "Needleman-Wunsch-ite.h" // Iterative implementation of NeedlemanWunsch with memoization
 #elif defined __CAWARE__
 #include "Needleman-Wunsch-caware.h" // Cache aware implementation of NeedlemanWunsch with memoization
+#elif defined __COBLIVIOUS__
+#include "Needleman-Wunsch-coblivious.h" // Cache oblivious implementation of NeedlemanWunsch with memoization
 #else
 #include "Needleman-Wunsch-recmemo.h" // Recursive implementation of NeedlemanWunsch with memoization
 #endif
@@ -144,8 +146,10 @@ void usage_and_spec(int argc, char *argv[]) // spécification du programme
  * \param argc : argc from main
  * \param argv : argv from main (the caller given parameters)
  */
-int main(int argc, char *argv[]) {
-    if (argc != 7) {
+int main(int argc, char *argv[])
+{
+    if (argc != 7)
+    {
         usage_and_spec(argc, argv);
         exit(EXIT_FAILURE);
     }
@@ -155,7 +159,7 @@ int main(int argc, char *argv[]) {
     long
         mmap_length[2]; // length of the mapping in virtual memory of file fd[i]
     char *seq[2];       // corresponding genetic sequence to file[i]*/
-    long length[2]; // the length of corresponding genetic sequence seq[i] */
+    long length[2];     // the length of corresponding genetic sequence seq[i] */
 
     for (int i = 0; i < 2;
          ++i, argv += 3) // defines content and length of seq[i] for i=0..1
@@ -178,7 +182,8 @@ int main(int argc, char *argv[]) {
             sscanf(argv[2], "%ld", &debut);
             seq[i] = mmap_fd[i] + debut; // beginning of the sequence
             long n_exceed = mmap_length[i] - debut;
-            if (n_exceed < 0) {
+            if (n_exceed < 0)
+            {
                 fprintf(stderr,
                         "Error: given sequence beginning %ld exceeds end of "
                         "file of %ld bytes.\n",
@@ -201,7 +206,8 @@ int main(int argc, char *argv[]) {
             sscanf(argv[3], "%ld", &length[i]);
             long n_exceed =
                 mmap_fd[i] + mmap_length[i] - 1 - (seq[i] + length[i]);
-            if (n_exceed < 0) {
+            if (n_exceed < 0)
+            {
                 fprintf(stderr,
                         "Warning: given sequence length %ld exceeds end of "
                         "file of %ld bytes; "
@@ -213,10 +219,13 @@ int main(int argc, char *argv[]) {
 
         { /* Print on stderr either the full sequence is length[i]<40 or the
              first twenty and last twenty characters of the sequence */
-            if (length[i] <= 40) {
+            if (length[i] <= 40)
+            {
                 for (char *c = seq[i]; (c < seq[i] + length[i]); ++c)
                     fprintf(stderr, "%c", *c);
-            } else {
+            }
+            else
+            {
                 {
                     for (char *c = seq[i]; (c < seq[i] + 20); ++c)
                         fprintf(stderr, "%c", *c);
@@ -237,9 +246,11 @@ int main(int argc, char *argv[]) {
     perfstart(&p);
 #endif
 #if defined __ITE__
-    long res = EditDistance_NW_Ite(seq[0], length[0], seq[1], length[1]); 
+    long res = EditDistance_NW_Ite(seq[0], length[0], seq[1], length[1]);
 #elif defined __CAWARE__
-    long res = EditDistance_NW_Caware(seq[0], length[0], seq[1], length[1]); 
+    long res = EditDistance_NW_Caware(seq[0], length[0], seq[1], length[1]);
+#elif defined __COBLIVIOUS__
+    long res = EditDistance_NW_Coblivious(seq[0], length[0], seq[1], length[1]);
 #else
     long res = EditDistance_NW_Rec(seq[0], length[0], seq[1], length[1]);
 #endif
@@ -250,7 +261,8 @@ int main(int argc, char *argv[]) {
 #endif
 
     {
-        for (int i = 0; i < 2; ++i) {
+        for (int i = 0; i < 2; ++i)
+        {
             if (munmap(mmap_fd[i], (off_t)mmap_length[i]) != 0)
                 err(1, "munmap");
             if (close(fd[i]) != 0)
