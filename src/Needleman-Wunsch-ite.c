@@ -36,7 +36,7 @@ long EditDistance_NW_Ite(char *A, size_t lengthA, char *B, size_t lengthB)
     long *curr = malloc((n + 1) * sizeof(long));
     if (!curr)
     {
-        fprintf(stderr, "EditDistance_NW_Ite: malloc of prev\n");
+        fprintf(stderr, "EditDistance_NW_Ite: malloc of curr\n");
     }
 
     long *p_prev = prev;

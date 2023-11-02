@@ -79,7 +79,7 @@ long EditDistance_NW_Coblivious(char *A, size_t lengthA, char *B, size_t lengthB
     values = malloc((n + 1) * (m + 1) * sizeof(long));
     if (!values)
     {
-        fprintf(stderr, "EditDistance_NW_Caware: malloc of values\n");
+        fprintf(stderr, "EditDistance_NW_Coblivious: malloc of values\n");
     }
 
     // Set first line

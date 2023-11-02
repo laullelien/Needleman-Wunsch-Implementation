@@ -27,12 +27,14 @@
 Binôme 
 (NOM\textsubscript{1} Prénom\textsubscript{1} --
  NOM\textsubscript{2} Prénom\textsubscript{2})
-\,: \dotfill
+\,: CHENEVOIS Augustin - DELORY Aurélien
 
 \section{Préambule 1 point}.
 Le programme récursif avec mémoisation fourni alloue une mémoire de taille $N.M$.
 Il génère une erreur d'exécution sur le test 5 (c-dessous) . Pourquoi ? \\
-Réponse:  A COMPLETER 
+Réponse:  \\
+On a ici $NM = 20236404 \times 19944517 \simeq 400 \times 10^{12}$, ce qui correspond à $3,2 \times 10^{15}$ octets, étant donné que l'on alloue un tableau de long. \\
+Il est donc impossible d'allouer un espace mémoire aussi grand, ce qui explique l'erreur.
 \begin{verbatim}
 distanceEdition-recmemo    GCA_024498555.1_ASM2449855v1_genomic.fna 77328790 20236404   \
                            GCF_000001735.4_TAIR10.1_genomic.fna 30808129 19944517 
@@ -42,28 +44,107 @@ distanceEdition-recmemo    GCA_024498555.1_ASM2449855v1_genomic.fna 77328790 202
 {\noindent\bf{Important}.} Dans toute la suite, on demande des programmes qui allouent un espace mémoire $O(N+M)$.
 
 \section{Programme itératif en espace mémoire $O(N+M)$ (5 points)}
-{\em Expliquer très brièvement (2 à 5 lignes max) le principe de votre code, la mémoire utilisée, le sens de parcours des tableaux.}
-\vspace*{1.0cm}
+{\em Expliquer très brièvement (2 à 5 lignes max) le principe de votre code, la mémoire utilisée, le sens de parcours des tableaux.} 
+
+\vspace*{0.3cm}
+
+On utilise 2 tableaux de taille $\min(M, N) + 1$. Pour la suite, on suppose que $N = \min(M, N)$, ce qui peut être obtenu en échangeant $X$ et $Y$. Une ligne permet de mémoriser les valeurs de $\phi(i, j)$ pour un certain $i$ et $j$ tel que $0 \leq j \leq N$. On peut calculer la ligne suivante à partir de la précédente puis échanger les deux. On réitère jusqu'à avoir calculé toutes les lignes et on renvoie le résultat.
+
+
+\vspace*{0.3cm}
 
 Analyse du coût théorique de ce  programme en fonction de $N$ et $M$  en notation $\Theta(...)$ 
 \begin{enumerate}
   \item place mémoire allouée (ne pas compter les 2 séquences $X$ et $Y$ en mémoire via {\tt mmap}) : 
+  \vspace*{0.2cm}
+  
+  On alloue 2 tableaux de taille $n+1$. On a donc une place mémoire allouée en $\Theta(N)$. 
   \item travail (nombre d'opérations) : 
+  
+  \vspace*{0.2cm}
+  
+  On calcule $\phi(i, j)$ pour tout $i, j$ tel que $0 \leq i \leq N$ et $0 \leq j \leq M$. Chacun de ces calculs se fait en temps constant, grâce aux valeurs précédentes. On a donc un travail en $\Theta(NM)$
+  
+  \vspace*{0.2cm}
+  
   \item nombre de défauts de cache obligatoires (sur modèle CO, y compris sur $X$ et $Y$):
+  
+  \vspace*{0.2cm}
+  
+  On a besoin de tous les caractères de $X$ et $Y$, de $1$ octet chacun ainsi que des long des 2 lignes précédemment allouées, de $8$ octet chacun afin d'exécuter cet algorithme. Le nombre de défauts de cache obligatoire est donc de $\lceil \frac{N}{L} \rceil + \lceil \frac{M}{L} \rceil + 2 \times \lceil \frac{8(N+1)}{L} \rceil = \Theta(\frac{N + M}{L})$
+  
+  \vspace*{0.2cm}
+  
   \item nombre de défauts de cache si $Z \ll \min(N,M)$ : 
+  
+  \vspace*{0.2cm}
+  
+  Soit $i$ tel que $0 \leq i \leq M$. Supposons que l'on soit en train de calculer $\phi(i, j)$ pour $j$ tel que $0 \leq j \leq N$. On utilise alors tout les caractères de $X$, un caractère de $Y$ et toutes les valeurs du tableau précédemment calculé. Ansi dans le cas où le cache n'est pas suffisement grand, le nombre de défauts de cache est de: \\
+  $\lceil \frac{8(N+1)}{L} \rceil$ (initialisation) \\
+  + \\
+  $N * (\lceil \frac{M}{L} \rceil + \lceil \frac{8(N+1)}{L} \rceil)$ ($Y$ et tableaux) \\
+  + \\
+  $\lceil \frac{N}{L} \rceil$  ($X$) \\
+  Au final, le nombre de défauts de cache est en $\Theta(\frac{N(N+M)}{L})$
+  
+  
 \end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%
 \section{Programme cache aware  (3 points)}
 {\em Expliquer très brièvement (2 à 5 lignes max) le principe de votre code, la mémoire utilisée, le sens de parcours des tableaux.}
-\vspace*{1.0cm}
+
+\vspace*{0.3cm}
+
+On utilise le même principe que pour l'algorithme itératif. Cependant, nos 2 tableaux ne sont plus de taille N + 1 mais d'une taille T qui permet que les 2 tableaux rentrent dans le cache. On ne peut donc plus calculer une ligne entière ($\phi(i,j)$ pour un certain $i$ et $j$ tel que $0 \leq j \leq N$). On peut cependant calculer $phi(i, j)$ pour un certain i et pour T valeurs de $j$.
+On mémorise ensuite ces résultats intermédiaires dans un tableau memo de taille M puis on réitère l'opération en utilisant memo. Dans la suite, M est la taille de la plus grande chaîne de caractères.
+
+\vspace*{0.3cm}
 
 Analyse du coût théorique de ce  programme en fonction de $N$ et $M$  en notation $\Theta(...)$ )
 \begin{enumerate}
-  \item place mémoire (ne pas compter les 2 séquences initiales $X$ et $Y$ en mémoire via {\tt mmap}) : 
+  \item place mémoire (ne pas compter les 2 séquences initiales $X$ et $Y$ en mémoire via {\tt mmap}) :
+  
+  \vspace*{0.2cm}
+  
+  memo : $M + 1$ \\
+  tableaux : $2 \times \frac{(Z - 2 \times L)}{2 \times 8 + 1} $ \\
+  $T = \frac{(Z - 2 \times L)}{2 \times 8 + 1} $ est un majorant du nombre maximal T d'éléments de nos $2$ tableaux (long) et de $Y$ (char) que l'on peut enregistrer dans le cache sachant qu'au moins une ligne est nécessaire pour $X$ et memo. \\
+  Au final, la place mémoire utilisée est en $\Theta(M + Z)$
+  
+  \vspace*{0.2cm}
+  
   \item travail (nombre d'opérations) : 
+  
+  \vspace*{0.2cm}
+  Le coût est similaire aux algorithmes précédents. On réalise cependant une étape en plus, la mémorisation des résultats intermédiaires de compléxité $\Theta(\frac{MN}{T})$. \\
+  La compléxité reste donx en $\Theta(NM)$
+  
+  \vspace*{0.2cm}
+  
   \item nombre de défauts de cache obligatoires (sur modèle CO, y compris sur $X$ et $Y$):
-  \item nombre de défauts de cache si $Z \ll \min(N,M)$ : 
+  
+  \vspace*{0.2cm}
+  
+  $X$: $\lceil \frac{M}{L} \rceil$ \\
+  $Y$: $\lceil \frac{N}{L} \rceil$ \\
+  Tableaux : $2 \times \lceil \frac{8 \times T }{L} \rceil$ \\
+  memo : $\lceil \frac{8 \times (M + 1)}{L} \rceil$ \\
+  Soit au total $\Theta(\frac{N + M + Z}{L})$
+  
+  \vspace*{0.2cm}
+  
+  \item nombre de défauts de cache si $Z \ll \min(N,M)$ :
+  
+  \vspace*{0.2cm}
+  
+  Défaults sur les 2 tableaux : $2 \times \lceil \frac{8 \times T }{L} \rceil$ \\
+  memo : $\lceil \frac{N}{T} \rceil \times \lceil \frac{8 \times (M + 1) }{L} \rceil$ \\
+  $X$ : $\lceil \frac{N}{T} \rceil \times \lceil \frac{M}{L} \rceil$ \\
+  $Y$ : $\lceil \frac{N}{T} \rceil \times \lceil \frac{T}{L} \rceil$ \\
+  Au total : $\Theta(\frac{NM}{TL})$
+  
+  
 \end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%
@@ -270,7 +351,7 @@ distanceEdition & GCA\_024498555.1\_ASM2449855v1\_genomic.fna & 77328790 & 20236
 \end{tabular}
 }
 
-A partir des résultats précédents, le programme {\em préciser itératif/cache aware/ cache oblivious} est
+A partir des résultats précédents, le programme {\em préciser itératif/cache aware/ cache oblivious} est
 le plus performant pour la commande ci dessus (test 5); les ressources pour l'exécution seraient environ:
 {\em (préciser la méthode de calcul utilisée)} 
 \begin{itemize}

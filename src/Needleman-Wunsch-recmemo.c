@@ -82,19 +82,19 @@ static long EditDistance_NW_RecMemo(struct NW_MemoContext *c, size_t i,
         } else { /* Note that stopping conditions (i==M) and (j==N) are already
                     stored in c->memo (cf EditDistance_NW_Rec) */
             long min = /* initialization  with cas 1*/
-                (isUnknownBase(Xi)
+                    (isUnknownBase(Xi)
                      ? SUBSTITUTION_UNKNOWN_COST
                      : (isSameBase(Xi, Yj) ? 0 : SUBSTITUTION_COST)) +
-                EditDistance_NW_RecMemo(c, i + 1, j + 1);
+                    EditDistance_NW_RecMemo(c, i + 1, j + 1);
             {
                 long cas2 =
-                    INSERTION_COST + EditDistance_NW_RecMemo(c, i + 1, j);
+                        INSERTION_COST + EditDistance_NW_RecMemo(c, i + 1, j);
                 if (cas2 < min)
                     min = cas2;
             }
             {
                 long cas3 =
-                    INSERTION_COST + EditDistance_NW_RecMemo(c, i, j + 1);
+                        INSERTION_COST + EditDistance_NW_RecMemo(c, i, j + 1);
                 if (cas3 < min)
                     min = cas3;
             }
@@ -133,13 +133,13 @@ long EditDistance_NW_Rec(char *A, size_t lengthA, char *B, size_t lengthB) {
          * elements and then memo as an array of (M+1) pointers, the
          * memo[i] being the address of memzone[i*(N+1)].
          */
-        ctx.memo = (long **)malloc((M + 1) * sizeof(long *));
+        ctx.memo = (long **) malloc((M + 1) * sizeof(long *));
         if (ctx.memo == NULL) {
             perror("EditDistance_NW_Rec: malloc of ctx_memo");
             exit(EXIT_FAILURE);
         }
         for (int i = 0; i <= M; ++i) {
-            ctx.memo[i] = (long *)malloc((N + 1) * sizeof(long));
+            ctx.memo[i] = (long *) malloc((N + 1) * sizeof(long));
             if (ctx.memo[i] == NULL) {
                 perror("EditDistance_NW_Rec: malloc of ctx_memo[i]");
                 exit(EXIT_FAILURE);
