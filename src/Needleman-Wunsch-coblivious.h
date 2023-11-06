@@ -21,9 +21,9 @@
 #define INSERTION_COST 2
 
 /** \def S
- *  \brief Threshold under which both string length must be to compute values
+ *  \brief Threshold
  */
-#define S 800
+#define S 240
 
 /********************************************************************************
  * Cache oblivious implementation of NeedlemanWunsch with memoization

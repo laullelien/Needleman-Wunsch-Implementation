@@ -25,9 +25,18 @@ binary: $(BINDIR)/distanceEdition
 binary_perf: $(BINDIR)/distanceEdition-perf
 
 $(BINDIR)/distanceEdition-perf: $(SRCDIR)/distanceEdition.c $(BINDIR)/Needleman-Wunsch-recmemo.o
-	$(CC) $(OPT) -D__PERF_MESURE__ -I$(SRCDIR) -o $(BINDIR)/distanceEdition-perf $(BINDIR)/Needleman-Wunsch-recmemo.o $(SRCDIR)/distanceEdition.c 
+	$(CC) $(OPT) -D__PERF_MESURE__ -I$(SRCDIR) -o $(BINDIR)/distanceEdition $(BINDIR)/Needleman-Wunsch-recmemo.o $(SRCDIR)/distanceEdition.c
 
-report: $(PDF) 
+$(BINDIR)/distanceEdition-perf-ite: $(SRCDIR)/distanceEdition.c $(BINDIR)/Needleman-Wunsch-ite.o
+	$(CC) $(OPT) -D__PERF_MESURE__ -D__ITE__ -I$(SRCDIR) -o $(BINDIR)/distanceEdition $(BINDIR)/Needleman-Wunsch-ite.o $(SRCDIR)/distanceEdition.c
+
+$(BINDIR)/distanceEdition-perf-caware: $(SRCDIR)/distanceEdition.c $(BINDIR)/Needleman-Wunsch-caware.o
+	$(CC) $(OPT) -D__PERF_MESURE__ -D__CAWARE__ -I$(SRCDIR) -o $(BINDIR)/distanceEdition $(BINDIR)/Needleman-Wunsch-caware.o $(SRCDIR)/distanceEdition.c
+
+$(BINDIR)/distanceEdition-perf-coblivious: $(SRCDIR)/distanceEdition.c $(BINDIR)/Needleman-Wunsch-coblivious.o
+	$(CC) $(OPT) -D__PERF_MESURE__ -D__COBLIVIOUS__ -I$(SRCDIR) -o $(BINDIR)/distanceEdition $(BINDIR)/Needleman-Wunsch-coblivious.o $(SRCDIR)/distanceEdition.c
+
+report: $(PDF)
 
 doc: $(DOCDIR)/index.html
 
@@ -79,7 +88,7 @@ $(DOCDIR)/index.html: $(SRCDIR)/Doxyfile $(CSOURCE)
 	$(DOCC) $(SRCDIR)/Doxyfile
 
 
-test: $(BINDIR)/distanceEdition $(TESTDIR)/Makefile-test
+test: $(TESTDIR)/Makefile-test
 	cd $(TESTDIR) ; make -f Makefile-test all 
 	
 test-ite: $(BINDIR)/distanceEdition-ite $(TESTDIR)/Makefile-test
@@ -90,6 +99,15 @@ test-caware: $(BINDIR)/distanceEdition-caware $(TESTDIR)/Makefile-test
 
 test-coblivious: $(BINDIR)/distanceEdition-coblivious $(TESTDIR)/Makefile-test
 	cd $(TESTDIR) ; make -f Makefile-test all 
+
+perf-test-ite: $(BINDIR)/distanceEdition-perf-ite $(TESTDIR)/Makefile-test
+	cd $(TESTDIR) ; make -f Makefile-test all
+
+perf-test-caware: $(BINDIR)/distanceEdition-perf-caware $(TESTDIR)/Makefile-test
+	cd $(TESTDIR) ; make -f Makefile-test all
+
+perf-test-coblivious: $(BINDIR)/distanceEdition-perf-coblivious $(TESTDIR)/Makefile-test
+	cd $(TESTDIR) ; make -f Makefile-test all
 
 test-valgrind: $(BINDIR)/distanceEdition $(TESTDIR)/Makefile-test
 	make -f $(TESTDIR)/Makefile-test all-valgrind

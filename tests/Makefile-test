@@ -22,7 +22,7 @@ clean:
 	@echo "... test 1 passed !"
 	@echo "*******************************"
 
-.test2.expected:  $(A_TESTER) 
+.test2.expected:  $(A_TESTER)
 	@echo "Test 2 : basic on small texts (should print 4) ..."
 	@echo "4" > .test2.expected 
 	$(A_TESTER) $(DIRTEST)/f1.fna 0 5 $(DIRTEST)/f2.fna 42 7 > test2.output
@@ -31,7 +31,7 @@ clean:
 	@echo "... test 2 passed !"
 	@echo "*******************************"
 
-.test3.expected:  $(A_TESTER) 
+.test3.expected:  $(A_TESTER)
 	@echo "Test 3 : small texts truncated from real SARS-Cov2 sequences (should print 464)"
 	@echo "464" > .test3.expected 
 	$(A_TESTER) $(DIRTEST)/ba52_recent_omicron.fasta 0 1000 $(DIRTEST)/wuhan_hu_1.fasta 0 1234  > test3.output
@@ -40,7 +40,7 @@ clean:
 	@echo "... test 3 passed !"
 	@echo "*******************************"
 
-.test4.expected:  $(A_TESTER) 
+.test4.expected:  $(A_TESTER)
 	@echo "Test 4 : real SARS-Cov2 sequences,  size= 30 kB (should print 369) ..."
 	@echo "369" > .test4.expected 
 	time $(A_TESTER) $(DIRTEST)/ba52_recent_omicron.fasta 153 30183 $(DIRTEST)/wuhan_hu_1.fasta 116 30331  > test4.output
@@ -49,7 +49,7 @@ clean:
 	@echo "... test 4 passed !"
 	@echo "*******************************"
 
-.test5.expected:  $(A_TESTER) 
+.test5.expected:  $(A_TESTER)
 	@echo "Test 5 : real sequences (Arabidopsis thaliana), size= 20 MBs (should print Killed or an error message) ..."
 	# echo "Killed" > .test5.expected 
 	$(A_TESTER)  \
