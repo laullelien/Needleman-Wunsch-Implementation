@@ -50,7 +50,7 @@ Or, les ordinateurs grand public ont en général au maximul quelques téraoctets d
 
 \noindent Pour la suite, on suppose que $N = \min(M, N)$, ce qui peut être obtenu en échangeant $X$ et $Y$.\\
 \\
-Notre algorithme exploite le fait que en connaissant les valeurs de $\phi(i, j)$ pour tout $j$ tel que $0 \leq j \leq N$ (c'est à dire en connaissant la ligne $i$), alors on peut déduire les valeurs de $\phi(i-1, j)$ pour tout $j$ tel que $0 \leq j \leq N$. Il utilise donc 2 tableaux de taille $\min(M, N) + 1$ où chaque tableau stocke une ligne. Un tableau permet de mémoriser les valeurs de $\phi(i, j)$ pour un certain $i$ et pour tout $j$ tel que $0 \leq j \leq N$. On peut calculer la ligne suivante à partir de la précédente puis échanger les deux. On réitère jusqu'à avoir calculé toutes les lignes et on renvoie le résultat.
+Notre algorithme exploite le fait que en connaissant les valeurs de $\phi(i, j)$ pour tout $j$ tel que $0 \leq j \leq N$ (c'est à dire en connaissant la ligne $i$), alors on peut déduire les valeurs de $\phi(i-1, j)$ pour tout $j$ tel que $0 \leq j \leq N$. Il utilise donc 2 tableaux de taille $\min(M, N) + 1$ où chaque tableau stocke une ligne. Un tableau permet de mémoriser les valeurs de $\phi(i, j)$ pour un certain $i$ et pour tout $j$ tel que $0 \leq j \leq N$. On peut calculer la ligne suivante à partir de la précédente puis échanger les deux. On réitère jusqu'à avoir calculé toutes les lignes et on renvoie le résultat (=$\phi(0,0)$).
 
 
 \vspace*{0.3cm}
@@ -150,12 +150,25 @@ Analyse du coût théorique de ce  programme en fonction de $N$ et $M$  en notatio
 
 %%%%%%%%%%%%%%%%%%%
 \section{Programme cache oblivious  (3 points)}
-{\em Expliquer très brièvement (2 à 5 lignes max) le principe de votre code, la mémoire utilisée, le sens de parcours des tableaux.}
+{\em Expliquer très brièvement (2 à 5 lignes max) le principe de votre code, la mémoire utilisée, le sens de parcours des tableaux.}\\
+\\
+L'algorithme utilise le même principe que le cache aware mais au lieu d'utiliser des lignes de tailles $T$ il utilise des lignes de taille $S$ qui est une variable globale. Pour cela, il utilise la récursivité : tant que les chaînes sont de tailles supérieures à S, on réappelle la fonction. Si les chaines sont de longueur inférieure à $S$, on réalise alors le même algorithme que celui de cache aware avec 2 chaînes de longeurs $S$ pour calculer $\phi(i, j)$ pour tout $i$ entre $0$ et $M$ et pour tout $j$ tel $0 \leq j \leq S-1$. Puis, on mémorise dans un tableau de taille $M$ les valeurs des $\phi(i, S-1)$ pour tout $i$ tel que $0 \leq i \leq M$. Le processus est ensuite réitéré grâce aux appels de fonction pour calculer tous les $\phi(i, j)$. En ne partitionnant que selon une dimension, on garde ainsi l'information de l'ordre de calcul et donc $M$ possède bien les valeurs utiles pour les calculs suivants.
+
 \vspace*{1.0cm}
 
 Analyse du coût théorique de ce  programme en fonction de $N$ et $M$  en notation $\Theta(...)$ )
 \begin{enumerate}
-  \item place mémoire (ne pas compter les 2 séquences initiales $X$ et $Y$ en mémoire via {\tt mmap}) : 
+  \item place mémoire (ne pas compter les 2 séquences initiales $X$ et $Y$ en mémoire via {\tt mmap}) :
+
+    \vspace*{0.2cm}
+  
+   
+  memo : $M + 1$ \\
+  tableaux : $2 \times \frac{(Z - 2 \times L)}{2 \times 8 + 1} $ \\
+  $T = \frac{(Z - 2 \times L)}{2 \times 8 + 1} $ est un majorant du nombre maximal T d'éléments de nos $2$ tableaux (long) et de $Y$ (char) que l'on peut enregistrer dans le cache sachant qu'au moins une ligne est nécessaire pour $X$ et memo. \\
+  Au final, la place mémoire utilisée est en $\Theta(M + Z)$
+  
+  \vspace*{0.2cm}
   \item travail (nombre d'opérations) : 
   \item nombre de défauts de cache obligatoires (sur modèle CO, y compris sur $X$ et $Y$):
   \item nombre de défauts de cache si $Z \ll \min(N,M)$ : 
